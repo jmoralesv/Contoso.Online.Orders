@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="..\ContosoOnlineOrders.Api\bin\Debug\net5.0\ContosoOnlineOrders.Api.json" CodeGenerator="NSwagCSharp" Namespace="ContosoOnlineOrders.ConsoleClient" Link="OpenAPIs\ContosoOnlineOrders.Api.json" />
+    <OpenApiReference Include="..\ContosoOnlineOrders.Api\ContosoOnlineOrders.Api.json" CodeGenerator="NSwagCSharp" Namespace="ContosoOnlineOrders.ConsoleClient" Link="OpenAPIs\ContosoOnlineOrders.Api.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +25,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ContosoOnlineOrders.Api\ContosoOnlineOrders.Api.csproj" />
   </ItemGroup>
 
 </Project>

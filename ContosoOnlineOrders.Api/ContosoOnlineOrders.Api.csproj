@@ -1,17 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<OpenApiDocumentName>1.2</OpenApiDocumentName>
 		<UserSecretsId>4c6ad165-01b9-4583-98f6-f7dd0aa726a7</UserSecretsId>
 	</PropertyGroup>
 
-	<Target Name="Generate OpenAPI Specification Document" AfterTargets="Build">
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+		<Exec Command="echo Configuration: $(Configuration)&#xD;&#xA;echo DevEnvDir: $(DevEnvDir)&#xD;&#xA;echo OutDir: $(OutDir)&#xD;&#xA;echo ProjectDir: $(ProjectDir)&#xD;&#xA;echo VisualStudioVersion: $(VisualStudioVersion)&#xD;&#xA;echo AssemblySearchPaths: $(AssemblySearchPaths)&#xD;&#xA;echo AssemblyName: $(AssemblyName)&#xD;&#xA;echo BaseIntermediateOutputPath: $(BaseIntermediateOutputPath)&#xD;&#xA;echo CscToolPath: $(CscToolPath)" />
+	</Target>
+	
+	<Target Name="GenerateOpenAPISpecificationDocument" AfterTargets="Build">
 		<Exec Command="echo 'Generating OpenAPI file for $(OpenApiDocumentName)'" />
 		<Exec Command="dotnet new tool-manifest --force"></Exec>
 		<Exec Command="dotnet tool install Swashbuckle.AspNetCore.Cli --version 5.6.3"></Exec>
 		<Exec Command="dotnet tool restore"></Exec>
-		<Exec Command="dotnet swagger tofile --serializeasv2 --output $(OutputPath)$(AssemblyName).json $(OutputPath)$(AssemblyName).dll $(OpenApiDocumentName)" ContinueOnError="true" />
+		<Exec Command="dotnet swagger tofile --serializeasv2 --output $(OutputPath)$(AssemblyName).json $(OutputPath)$(AssemblyName).dll $(OpenApiDocumentName)" ContinueOnError="false" />
+	</Target>
+
+	<Target Name="CopyCustomContent" AfterTargets="GenerateOpenAPISpecificationDocument">
+		<Copy SourceFiles="$(OutputPath)$(AssemblyName).json" DestinationFolder="$(ProjectDir)" ContinueOnError="false" />
 	</Target>
 
 	<ItemGroup>
