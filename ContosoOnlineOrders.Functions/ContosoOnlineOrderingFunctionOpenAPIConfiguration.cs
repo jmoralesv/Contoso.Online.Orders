@@ -1,9 +1,9 @@
-﻿using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Configurations;
+﻿using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ContosoOnlineOrders.Functions
 {
@@ -25,11 +25,17 @@ namespace ContosoOnlineOrders.Functions
         {
             get
             {
-                return (new OpenApiServer[] { new OpenApiServer { Url = 
+                return (new OpenApiServer[] { new OpenApiServer { Url =
                     Environment.GetEnvironmentVariable("WEBSITE_HOSTNAME")
                 }}).ToList();
             }
             set => throw new NotImplementedException();
         }
+
+        public OpenApiVersionType OpenApiVersion { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool IncludeRequestingHostName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool ForceHttp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool ForceHttps { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public List<IDocumentFilter> DocumentFilters { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }
