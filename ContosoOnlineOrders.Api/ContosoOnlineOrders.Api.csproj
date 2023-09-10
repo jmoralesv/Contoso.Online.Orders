@@ -8,6 +8,9 @@
 
 	<Target Name="Generate OpenAPI Specification Document" AfterTargets="Build">
 		<Exec Command="echo 'Generating OpenAPI file for $(OpenApiDocumentName)'" />
+		<Exec Command="dotnet new tool-manifest --force"></Exec>
+		<Exec Command="dotnet tool install Swashbuckle.AspNetCore.Cli --version 5.6.3"></Exec>
+		<Exec Command="dotnet tool restore"></Exec>
 		<Exec Command="dotnet swagger tofile --serializeasv2 --output $(OutputPath)$(AssemblyName).json $(OutputPath)$(AssemblyName).dll $(OpenApiDocumentName)" ContinueOnError="true" />
 	</Target>
 
