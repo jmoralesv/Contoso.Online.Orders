@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContosoOnlineOrders.Api", "ContosoOnlineOrders.Api\ContosoOnlineOrders.Api.csproj", "{27B53267-1B4D-403F-9667-7031CEC537A3}"
 EndProject
@@ -21,9 +21,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsotoOnlineOrders.RefitAb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContosoOnlineOrders.ConsoleClient", "ContosoOnlineOrders.NSwagGeneratedClient\ContosoOnlineOrders.ConsoleClient.csproj", "{5548B0F9-7776-4D7A-9858-B4F123310D0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContosoOnlineOrders.DataProviders.Cosmos", "ContosoOnlineOrders.DataProviders.Cosmos\ContosoOnlineOrders.DataProviders.Cosmos.csproj", "{9B0DB724-4B95-494F-8756-F2F031A22DF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContosoOnlineOrders.DataProviders.Cosmos", "ContosoOnlineOrders.DataProviders.Cosmos\ContosoOnlineOrders.DataProviders.Cosmos.csproj", "{9B0DB724-4B95-494F-8756-F2F031A22DF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContosoOnlineOrders.Functions", "ContosoOnlineOrders.Functions\ContosoOnlineOrders.Functions.csproj", "{60C7D478-D5BB-485D-8810-7939F99F39FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContosoOnlineOrders.Functions", "ContosoOnlineOrders.Functions\ContosoOnlineOrders.Functions.csproj", "{60C7D478-D5BB-485D-8810-7939F99F39FE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{41C2AC72-9C8B-49E0-AAA7-65A7A15A3015}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+		test-the-api.http = test-the-api.http
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

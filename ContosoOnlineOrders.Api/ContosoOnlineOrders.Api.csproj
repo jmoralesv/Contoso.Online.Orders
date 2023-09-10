@@ -5,10 +5,6 @@
 		<OpenApiDocumentName>1.2</OpenApiDocumentName>
 		<UserSecretsId>4c6ad165-01b9-4583-98f6-f7dd0aa726a7</UserSecretsId>
 	</PropertyGroup>
-
-	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-		<Exec Command="echo Configuration: $(Configuration)&#xD;&#xA;echo DevEnvDir: $(DevEnvDir)&#xD;&#xA;echo OutDir: $(OutDir)&#xD;&#xA;echo ProjectDir: $(ProjectDir)&#xD;&#xA;echo VisualStudioVersion: $(VisualStudioVersion)&#xD;&#xA;echo AssemblySearchPaths: $(AssemblySearchPaths)&#xD;&#xA;echo AssemblyName: $(AssemblyName)&#xD;&#xA;echo BaseIntermediateOutputPath: $(BaseIntermediateOutputPath)&#xD;&#xA;echo CscToolPath: $(CscToolPath)" />
-	</Target>
 	
 	<Target Name="GenerateOpenAPISpecificationDocument" AfterTargets="Build">
 		<Exec Command="echo 'Generating OpenAPI file for $(OpenApiDocumentName)'" />
