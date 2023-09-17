@@ -1,38 +1,32 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using AdaptiveCards;
 using AdaptiveCards.Templating;
-using System.Collections.Generic;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
-using System.Linq;
+using Microsoft.Extensions.Logging;
+using System.Net;
+using System.Net.Mime;
+using System.Text.Json;
 
 namespace ContosoOnlineOrders.Functions
 {
-    public static class InventoryNotifier
+    public class InventoryNotifier
     {
-        [OpenApiOperation(operationId: nameof(SendLowStockNotification),
-          Visibility = OpenApiVisibilityType.Important)
-        ]
-        [OpenApiRequestBody(contentType: "application/json",
-          bodyType: typeof(Product[]),
-          Required = true)
-        ]
-        [FunctionName(nameof(SendLowStockNotification))]
-        public static async Task<IActionResult> SendLowStockNotification(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
-            ILogger log)
+        private readonly ILogger logger;
+
+        public InventoryNotifier(ILogger logger)
+        {
+            this.logger = logger;
+        }
+
+        [OpenApiOperation(operationId: nameof(SendLowStockNotification), Visibility = OpenApiVisibilityType.Important)]
+        [OpenApiRequestBody(contentType: MediaTypeNames.Application.Json, bodyType: typeof(Product[]), Required = true)]
+        [Function(nameof(SendLowStockNotification))]
+        public static async Task<HttpResponseData> SendLowStockNotification(
+            [HttpTrigger(AuthorizationLevel.Anonymous, WebRequestMethods.Http.Post, Route = null)] HttpRequestData request)
         {
             // variable for holding the json data during card-templating
-            var json = "";
+            var json = string.Empty;
 
             // create the meta for the card
             var meta = new CardMetadata
@@ -43,31 +37,30 @@ namespace ContosoOnlineOrders.Functions
                 Creator = new Creator
                 {
                     Name = "Inventory Robot",
-                    ProfileImage = "https://github.com/dotnet/brand/blob/master/dotnet-bot-illustrations/dotnet-bot/dotnet-bot.png?raw=true"
+                    ProfileImage = "https://github.com/dotnet/brand/blob/main/dotnet-bot-illustrations/dotnet-bot/dotnet-bot.png?raw=true"
                 }
             };
 
             // open the card template
-            using(Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ContosoOnlineOrders.Functions.InventoryNotificationCard.json"))
+            using (Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ContosoOnlineOrders.Functions.InventoryNotificationCard.json"))
             {
-                using (StreamReader rdr = new StreamReader(stream))
-                {
-                    json = rdr.ReadToEnd();
-                }
+                using StreamReader rdr = new(stream);
+                json = await rdr.ReadToEndAsync();
             }
 
             // add all the products that need re-stocking to the card
-            meta.Products = JsonConvert.DeserializeObject<List<Product>>(
-                await req.ReadAsStringAsync()
-            ).Where(_ => _.InventoryCount <= 5)
+            meta.Products = JsonSerializer.Deserialize<List<Product>>(await request.ReadAsStringAsync())
+                .Where(p => p.InventoryCount <= 5)
                 .ToList();
 
             // render the card
-            AdaptiveCardTemplate template = new AdaptiveCardTemplate(json);
+            AdaptiveCardTemplate template = new(json);
             json = template.Expand(meta);
 
             // return the result
-            return new OkObjectResult(json);
+            var response = request.CreateResponse(HttpStatusCode.OK);
+            await response.WriteStringAsync(json);
+            return response;
         }
     }
 }

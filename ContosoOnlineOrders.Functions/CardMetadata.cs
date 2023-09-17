@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace ContosoOnlineOrders.Functions
 {
     public class CardMetadata
     {
-        [JsonPropertyName("title")] 
+        [JsonPropertyName("title")]
         public string Title { get; set; }
 
-        [JsonPropertyName("description")] 
+        [JsonPropertyName("description")]
         public string Description { get; set; }
 
         [JsonPropertyName("createdUtc")]
@@ -25,7 +22,7 @@ namespace ContosoOnlineOrders.Functions
 
     public class Creator
     {
-        [JsonPropertyName("name")] 
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
         [JsonPropertyName("profileImage")]
