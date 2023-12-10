@@ -1,11 +1,11 @@
+using Asp.Versioning;
+using ContosoOnlineOrders.Abstractions;
+using ContosoOnlineOrders.Abstractions.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
-using ContosoOnlineOrders.Abstractions;
-using ContosoOnlineOrders.Abstractions.Models;
-using ContosoOnlineOrders.Api.Services;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ContosoOnlineOrders.Api.Controllers
 {
@@ -16,17 +16,12 @@ namespace ContosoOnlineOrders.Api.Controllers
     [ApiVersion("1.2")]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
-    public class ShopController : ControllerBase
+    public class ShopController(IStoreDataService storeServices) : ControllerBase
     {
-        public IStoreDataService StoreServices { get; }
-
-        public ShopController(IStoreDataService storeServices)
-        {
-            StoreServices = storeServices;
-        }
+        public IStoreDataService StoreServices { get; } = storeServices;
 
         [HttpPost("/orders", Name = nameof(CreateOrder))]
-        public async Task<ActionResult<Order>> CreateOrder(Order order)
+        public Task<ActionResult<Order>> CreateOrder(Order order)
         {
             ActionResult<Order> result = Conflict();
 
@@ -40,7 +35,7 @@ namespace ContosoOnlineOrders.Api.Controllers
                 result = Conflict();
             }
 
-            return await Task.FromResult(result);
+            return Task.FromResult(result);
         }
 
         [HttpGet("/products", Name = nameof(GetProducts))]
@@ -60,17 +55,17 @@ namespace ContosoOnlineOrders.Api.Controllers
         }
 
         [HttpGet("/products/{id}", Name = nameof(GetProduct))]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public Task<ActionResult<Product>> GetProduct(int id)
         {
             var product = StoreServices.GetProduct(id);
             ActionResult<Product> result = NotFound();
 
-            if(product != null)
+            if (product != null)
             {
                 result = Ok(product);
             }
 
-            return await Task.FromResult(result);
+            return Task.FromResult(result);
         }
     }
 }

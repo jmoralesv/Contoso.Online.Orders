@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<OpenApiDocumentName>1.2</OpenApiDocumentName>
 		<UserSecretsId>4c6ad165-01b9-4583-98f6-f7dd0aa726a7</UserSecretsId>
 	</PropertyGroup>
@@ -9,7 +9,7 @@
 	<Target Name="GenerateOpenAPISpecificationDocument" AfterTargets="Build">
 		<Exec Command="echo 'Generating OpenAPI file for $(OpenApiDocumentName)'" />
 		<Exec Command="dotnet new tool-manifest --force"></Exec>
-		<Exec Command="dotnet tool install Swashbuckle.AspNetCore.Cli --version 6.5.0"></Exec>
+		<Exec Command="dotnet tool install Swashbuckle.AspNetCore.Cli"></Exec>
 		<Exec Command="dotnet tool restore"></Exec>
 		<Exec Command="dotnet swagger tofile --serializeasv2 --output $(OutputPath)$(AssemblyName).json $(OutputPath)$(AssemblyName).dll $(OpenApiDocumentName)" ContinueOnError="false" />
 	</Target>
@@ -19,12 +19,12 @@
 	</Target>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" NoWarn="NU1605" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.11" NoWarn="NU1605" />
-		<PackageReference Include="Microsoft.Azure.Cosmos" Version="3.35.4" NoWarn="NU1605" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" NoWarn="NU1605" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.0" NoWarn="NU1605" />
+		<PackageReference Include="Microsoft.Azure.Cosmos" Version="3.37.0" NoWarn="NU1605" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
+		<PackageReference Include="Asp.Versioning.Mvc" Version="8.0.0" />
+		<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

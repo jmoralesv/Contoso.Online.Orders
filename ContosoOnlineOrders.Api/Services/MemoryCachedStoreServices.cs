@@ -7,17 +7,12 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace ContosoOnlineOrders.Api.Services
 {
-    public class MemoryCachedStoreServices : IStoreDataService
+    public class MemoryCachedStoreServices(IMemoryCache memoryCache) : IStoreDataService
     {
         const string MEMCACHE_KEY_ORDERS = "orders";
         const string MEMCACHE_KEY_PRODUCTS = "products";
 
-        public MemoryCachedStoreServices(IMemoryCache memoryCache)
-        {
-            MemoryCache = memoryCache;
-        }
-
-        public IMemoryCache MemoryCache { get; }
+        public IMemoryCache MemoryCache { get; } = memoryCache;
 
         public bool CheckOrderInventory(Guid id)
         {

@@ -1,12 +1,12 @@
+using Asp.Versioning;
+using ContosoOnlineOrders.Abstractions;
+using ContosoOnlineOrders.Abstractions.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
-using ContosoOnlineOrders.Abstractions;
-using ContosoOnlineOrders.Abstractions.Models;
-using ContosoOnlineOrders.Api.Services;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ContosoOnlineOrders.Api.Controllers
 {
@@ -17,14 +17,9 @@ namespace ContosoOnlineOrders.Api.Controllers
     [ApiVersion("1.2")]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
-    public class AdminController : ControllerBase
+    public class AdminController(IStoreDataService storeServices) : ControllerBase
     {
-        public IStoreDataService StoreServices { get; }
-
-        public AdminController(IStoreDataService storeServices)
-        {
-            StoreServices = storeServices;
-        }
+        public IStoreDataService StoreServices { get; } = storeServices;
 
         [HttpGet("/orders", Name = nameof(GetOrders))]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
@@ -33,21 +28,21 @@ namespace ContosoOnlineOrders.Api.Controllers
         }
 
         [HttpGet("/orders/{id}", Name = nameof(GetOrder))]
-        public async Task <ActionResult<Order>> GetOrder([FromRoute] Guid id)
+        public Task<ActionResult<Order>> GetOrder([FromRoute] Guid id)
         {
             var order = StoreServices.GetOrder(id);
             ActionResult<Order> result = NotFound();
 
-            if(order != null)
+            if (order != null)
             {
                 result = Ok(order);
             }
 
-            return await Task.FromResult(result);
+            return Task.FromResult(result);
         }
 
         [HttpGet("/orders/{id}/checkInventory", Name = nameof(CheckInventory))]
-        public async Task<ActionResult> CheckInventory([FromRoute] Guid id)
+        public Task<ActionResult> CheckInventory([FromRoute] Guid id)
         {
             ActionResult result = NotFound();
 
@@ -64,25 +59,25 @@ namespace ContosoOnlineOrders.Api.Controllers
                 result = Conflict();
             }
 
-            return await Task.FromResult(result);
+            return Task.FromResult(result);
         }
 
         [HttpGet("/orders/{id}/ship", Name = nameof(ShipOrder))]
-        public async Task<ActionResult> ShipOrder([FromRoute] Guid id)
+        public Task<ActionResult> ShipOrder([FromRoute] Guid id)
         {
             var shipResult = StoreServices.ShipOrder(id);
             ActionResult result = NotFound();
 
-            if(shipResult)
+            if (shipResult)
             {
                 result = Ok();
             }
 
-            return await Task.FromResult(result);
+            return Task.FromResult(result);
         }
 
         [HttpPut("/products/{id}/checkInventory", Name = nameof(UpdateProductInventory))]
-        public async Task<ActionResult> UpdateProductInventory([FromRoute] int id, 
+        public Task<ActionResult> UpdateProductInventory([FromRoute] int id,
             [FromBody] InventoryUpdateRequest request)
         {
             ActionResult result = NotFound();
@@ -97,14 +92,14 @@ namespace ContosoOnlineOrders.Api.Controllers
                 result = NotFound();
             }
 
-            return await Task.FromResult(result);
+            return Task.FromResult(result);
         }
 
-[HttpPost("/products", Name = nameof(CreateProduct))]
-        public async Task<ActionResult<Product>> CreateProduct(
-            [FromBody] CreateProductRequest request)
+        [HttpPost("/products", Name = nameof(CreateProduct))]
+        public Task<ActionResult<Product>> CreateProduct(
+                    [FromBody] CreateProductRequest request)
         {
-            ActionResult<Product> result = NotFound();
+            ActionResult<Product> result;
 
             try
             {
@@ -117,7 +112,7 @@ namespace ContosoOnlineOrders.Api.Controllers
                 result = Conflict();
             }
 
-            return await Task.FromResult(result);
+            return Task.FromResult(result);
         }
 
         [HttpGet("/low-inventory", Name = nameof(GetLowInventoryProducts))]
